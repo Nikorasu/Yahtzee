@@ -101,14 +101,3 @@ class Game:
     def end_game(self):
         # Game over, somehow work out how to provide final scores/reward and/or reset the game
         pass
-
-
-# NOTES & old unused stuff
-# ones, twos, threes, fours, fives, sixes, 63bonus(35), three kind, four kind, full house, small straight, large straight, yahtzee, chance, total
-#print(f"Ones: {turn.score[0]} Twos: {turn.score[1]} Threes: {turn.score[2]} Fours: {turn.score[3]} Fives: {turn.score[4]} Sixes: {turn.score[5]}")
-#print(f"Three of a kind: {turn.score[6]} Four of a kind: {turn.score[7]} Full house: {turn.score[8]} Small straight: {turn.score[9]} Large straight: {turn.score[10]} Yahtzee: { turn.score[11]} Chance: {turn.score[12]}")
-''' # for later, list of possible reroll actions AI will have available to choose from, if score options aren't good.
-potrolls = [[0], [1], [2], [3], [4], [0, 1], [0, 2], [0, 3], [0, 4], [1, 2], [1, 3], [1, 4],[2, 3], [2, 4], [3, 4],
-        [0, 1, 2], [0, 1, 3], [0, 1, 4], [0, 2, 3], [0, 2, 4], [0, 3, 4], [1, 2, 3], [1, 2, 4], [1, 3, 4], [2, 3, 4],
-        [0, 1, 2, 3], [0, 1, 2, 4], [0, 1, 3, 4], [0, 2, 3, 4], [1, 2, 3, 4], [0, 1, 2, 3, 4]]
-'''
