@@ -6,7 +6,6 @@ import random
 # and a list showing the current game's existing scoresheet including upper bonus, yahtzees, and total score (16 numbers).
 # The NN's available outputs (possible actions the NN can take) will be 44, the 13 potential scoring choices, or 31 different re-roll choices.
 # The game class will automatically manage the finer details of scoring, like tallying yahtzee and upper bonuses (so AI only has to choose 1 action).
-# Interactions with the game and turn classes will be handled by viewing class.properties or running functions, not through input()
 
 class Turn:
     
@@ -84,7 +83,6 @@ class Game:
         if self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
             self.scoresheet[14] += 100
         self.scoresheet[15] = sum(s for s in self.scoresheet[:15] if s > 0)
-        #self.scoresheet[15] = sum(max(0, s) for s in self.scoresheet[:15])
 
     def get_reroll_indices(self, action):
         # Map the action index to the corresponding re-roll indices
