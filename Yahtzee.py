@@ -43,9 +43,9 @@ class Game:
         self.reset_game()
 
     def reset_game(self):
-        self.scoresheet = [-1] * 13 + [0] * 3 # 0s are upper & yahtzees bonuses, and total score
-        self.rnd_count = 0
+        self.rnd_count = 13 # should round count be given to AI?
         self.rr_remain = 2  # rr_remain may need to be passed to NN
+        self.scoresheet = [-1] * 13 + [0] * 3 # 0s are upper & yahtzees bonuses, and total score
         self.turn = Turn(self.scoresheet[:])
 
     def action(self, choice):
@@ -67,8 +67,8 @@ class Game:
         if self.scoresheet[category] == -1:
             self.scoresheet[category] = self.turn.score[category]
             self.update_scoresheet()
-            self.rnd_count += 1
-            if self.rnd_count >= 13:
+            self.rnd_count -= 1
+            if self.rnd_count <=0:
                 self.end_game()
             else:
                 self.turn = Turn(self.scoresheet[:])
@@ -101,3 +101,5 @@ class Game:
     def end_game(self):
         # Game over, somehow work out how to provide final scores/reward and/or reset the game
         pass
+
+# Need a loop that will tie everything together..
