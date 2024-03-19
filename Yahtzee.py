@@ -60,7 +60,7 @@ class Game:
         self.rr_remain = 2  # pretty sure rr_remain may need to be passed to NN
         self.scoresheet = [-1] * 13 + [0] * 3 # 0s are upper & yahtzees bonuses, and total score
         self.turn = Turn(self.scoresheet[:])
-        self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + self.scoresheet
+        self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
 
     def action(self, choice):
         # may need to return a reward after actions?
@@ -76,6 +76,7 @@ class Game:
         else:
             # Action is invalid, resulting in no reward?
             pass
+        self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
 
     def score_category(self, category):
         if self.scoresheet[category] == -1:
