@@ -31,10 +31,12 @@ class Turn:
             sum(self.dice) if any(count >= 4 for count in self.counts) and self.scoresheet[7] == -1 else 0,
             25 if (3 in self.counts and 2 in self.counts) and self.scoresheet[8] == -1 else 0,
             30 if ((self.counts[0] > 0 and self.counts[1] > 0 and self.counts[2] > 0 and self.counts[3] > 0) or
-                        (self.counts[1] > 0 and self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0) or
-                        (self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0 and self.counts[5] > 0)) and self.scoresheet[9] == -1 else 0,
+                (self.counts[1] > 0 and self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0) or
+                (self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0 and self.counts[5] > 0)) and
+                self.scoresheet[9] == -1 else 0,
             40 if ((self.counts[0] > 0 and self.counts[1] > 0 and self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0) or
-                        (self.counts[1] > 0 and self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0 and self.counts[5] > 0)) and self.scoresheet[10] == -1 else 0,
+                (self.counts[1] > 0 and self.counts[2] > 0 and self.counts[3] > 0 and self.counts[4] > 0 and self.counts[5] > 0)) and 
+                self.scoresheet[10] == -1 else 0,
             50 if any(count == 5 for count in self.counts) and self.scoresheet[11] == -1 else 0,
             sum(self.dice) if self.scoresheet[12] == -1 else 0
         ]
