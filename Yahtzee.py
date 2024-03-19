@@ -41,6 +41,16 @@ class Turn:
 
 class Game:
     def __init__(self):
+        self.rerolls = {
+            13: [0], 14: [1], 15: [2], 16: [3], 17: [4],
+            18: [0, 1], 19: [0, 2], 20: [0, 3], 21: [0, 4],
+            22: [1, 2], 23: [1, 3], 24: [1, 4], 25: [2, 3],
+            26: [2, 4], 27: [3, 4], 28: [0, 1, 2], 29: [0, 1, 3],
+            30: [0, 1, 4], 31: [0, 2, 3], 32: [0, 2, 4], 33: [0, 3, 4],
+            34: [1, 2, 3], 35: [1, 2, 4], 36: [1, 3, 4], 37: [2, 3, 4],
+            38: [0, 1, 2, 3], 39: [0, 1, 2, 4], 40: [0, 1, 3, 4],
+            41: [0, 2, 3, 4], 42: [1, 2, 3, 4], 43: [0, 1, 2, 3, 4]
+        }
         self.reset_game()
 
     def reset_game(self):
@@ -59,7 +69,7 @@ class Game:
         elif self.rr_remain > 0:
             self.rr_remain -= 1
             # Action is a re-roll choice
-            reroll_indices = self.get_reroll_indices(choice)
+            reroll_indices = self.rerolls[choice]
             self.turn.roll(reroll_indices) # should rerolling get a reward too?
         else:
             # Action is invalid, resulting in no reward?
@@ -85,20 +95,6 @@ class Game:
         if self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
             self.scoresheet[14] += 100
         self.scoresheet[15] = sum(s for s in self.scoresheet[:15] if s > 0)
-
-    def get_reroll_indices(self, action):
-        # Map the action index to the corresponding re-roll indices
-        reroll_mapping = {
-            13: [0], 14: [1], 15: [2], 16: [3], 17: [4],
-            18: [0, 1], 19: [0, 2], 20: [0, 3], 21: [0, 4],
-            22: [1, 2], 23: [1, 3], 24: [1, 4], 25: [2, 3],
-            26: [2, 4], 27: [3, 4], 28: [0, 1, 2], 29: [0, 1, 3],
-            30: [0, 1, 4], 31: [0, 2, 3], 32: [0, 2, 4], 33: [0, 3, 4],
-            34: [1, 2, 3], 35: [1, 2, 4], 36: [1, 3, 4], 37: [2, 3, 4],
-            38: [0, 1, 2, 3], 39: [0, 1, 2, 4], 40: [0, 1, 3, 4],
-            41: [0, 2, 3, 4], 42: [1, 2, 3, 4], 43: [0, 1, 2, 3, 4]
-        }
-        return reroll_mapping[action]
 
     def end_game(self):
         # Game over, somehow work out how to provide final scores/reward and/or reset the game
