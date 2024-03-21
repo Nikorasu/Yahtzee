@@ -63,6 +63,7 @@ class Game:
         self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
 
     def action(self, choice):
+        # Takes a number from 0 to 43, corresponding to the 13 scoring choices and 31 re-roll choices.
         # may need to return a reward after actions?
         if 0 <= choice < 13:
             # Action is a scoring choice

@@ -58,7 +58,7 @@ class Game:
         input("Ready? Press Enter!")
         while self.rnd_count > 0:
             if self.rr_remain == 2: self.turn = Turn(self.scoresheet[:])
-            print(f"\nScoresheet:\n{'  '.join(f'''{nl if i==6 else ''}{i if i < 13 else nl}-{cats[i]}: {s}''' for i,s in enumerate([max(0,s) for s in self.scoresheet]))}")
+            print(f"\nScoresheet:\n{'  '.join(f'''{nl if i==6 else ''}{i if i < 13 else nl}-{cats[i]}: {s}''' for i,s in enumerate([s if s >= 0 else '_' for s in self.scoresheet]))}")
             print(f"\nRound - {14-self.rnd_count}")
             print(f'''\nDice:  {'  '.join('abcde'[i]+"-"+faces[d] for i,d in enumerate(self.turn.dice))}\n''')
             print(f"Available:  {'  '.join(f'{i}-{cats[i]}: {s}' for i,s in enumerate(self.turn.score) if s > 0)}")
@@ -91,7 +91,8 @@ class Game:
         self.scoresheet[15] = sum(s for s in self.scoresheet[:15] if s > 0)
 
     def end_game(self):
-        print(f"Final score: {self.scoresheet[15]}")
+        print("\nFinal scores:")
+        print(f"{'  '.join(f'''{nl if i==6 else ''}{i if i < 13 else nl}-{cats[i]}: {s}''' for i,s in enumerate([s if s >= 0 else '_' for s in self.scoresheet]))}")
 
 if __name__ == '__main__':
     Game()
