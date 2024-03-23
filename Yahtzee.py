@@ -68,7 +68,7 @@ class Game:
             # Action is a scoring choice
             self.scoresheet[choice] = self.turn.score[choice]
             self.update_scoresheet()
-            reward = self.turn.score[choice] + 1
+            reward = self.turn.score[choice]
             self.rnd_count -= 1
             if self.rnd_count <=0:
                 reward += self.end_game()
@@ -78,11 +78,11 @@ class Game:
                 max_future_reward = max(self.turn.score)
             self.rr_remain = 2
         elif choice in self.rerolls and self.rr_remain > 0:
-            self.rr_remain -= 1
             # Action is a re-roll choice
+            self.rr_remain -= 1
+            reward = max(self.turn.score)//2
             reroll_indices = self.rerolls[choice]
-            self.turn.roll(reroll_indices) # should rerolling get a reward too?
-            reward = 1
+            self.turn.roll(reroll_indices)
             max_future_reward = max(self.turn.score)
         else:
             reward = -1
@@ -100,6 +100,6 @@ class Game:
 
     def end_game(self):
         end_score = self.scoresheet[15]
-        end_reward = end_score/10 if end_score > 100 else -50
+        end_reward = end_score if end_score > 100 else -50
         self.reset_game()
         return end_reward
