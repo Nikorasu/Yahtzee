@@ -49,6 +49,7 @@ class Game:
         self.reset_game()
 
     def reset_game(self):
+        self.valid = True
         self.rnd_count = 13
         self.rr_remain = 2
         self.scoresheet = [-1] * 13 + [0] * 3 # 0s are upper & yahtzees bonuses, and total score
@@ -57,30 +58,26 @@ class Game:
     def play(self):
         input("Ready? Press Enter!")
         while self.rnd_count > 0:
-            if self.rr_remain == 2: self.turn = Turn(self.scoresheet[:])
+            if self.rr_remain == 2 and self.valid: self.turn = Turn(self.scoresheet[:])
             print(f"\nScoresheet:\n{'  '.join(f'''{nl if i==6 else ''}{i if i < 13 else nl}-{cats[i]}: {s}''' for i,s in enumerate([s if s >= 0 else '_' for s in self.scoresheet]))}")
             print(f"\nRound - {14-self.rnd_count}")
             print(f'''\nDice:  {'  '.join('abcde'[i]+"-"+faces[d] for i,d in enumerate(self.turn.dice))}\n''')
             print(f"Available:  {'  '.join(f'{i}-{cats[i]}: {s}' for i,s in enumerate(self.turn.score) if s > 0)}")
             print(f"Rerolls remaining:  {self.rr_remain}\n")
             choice = input("Choose a score # option, or which dice (abcde) to reroll: ")
-            if choice.isdigit():
-                self.score_category(int(choice))
+            if choice.isdigit() and 0 <= int(choice) < 13 and self.scoresheet[int(choice)] == -1:
+                self.scoresheet[int(choice)] = self.turn.score[int(choice)]
+                self.update_scoresheet()
                 self.rr_remain = 2
                 self.rnd_count -= 1
-            elif choice.isalpha() and self.rr_remain > 0:
+            elif all(c in 'abcde' for c in choice) and self.rr_remain > 0:
                 self.turn.roll([i for i, c in enumerate('abcde') if c in choice])
                 self.rr_remain -= 1
             else:
                 print("Invalid choice!")
+                self.valid = False
+            self.valid = True
         self.end_game()
-
-    def score_category(self, category):
-        if self.scoresheet[category] == -1:
-            self.scoresheet[category] = self.turn.score[category]
-            self.update_scoresheet()
-        else:
-            print("Slot already used!")
 
     def update_scoresheet(self):
         upper_section_score = sum(self.scoresheet[:6])

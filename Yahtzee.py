@@ -64,33 +64,27 @@ class Game:
 
     def action(self, choice):
         # Takes a number from 0 to 43, corresponding to the 13 scoring choices and 31 re-roll choices.
-        # may need to return a reward after actions?
-        if 0 <= choice < 13:
+        if (0 <= choice < 13) and self.scoresheet[choice] == -1:
             # Action is a scoring choice
-            self.score_category(choice)
+            self.scoresheet[choice] = self.turn.score[choice]
+            self.update_scoresheet()
+            reward = self.turn.score[choice] + 1
+            self.rnd_count -= 1
+            if self.rnd_count <=0:
+                reward += self.end_game()
+            else:
+                self.turn = Turn(self.scoresheet[:])
             self.rr_remain = 2
         elif self.rr_remain > 0:
             self.rr_remain -= 1
             # Action is a re-roll choice
             reroll_indices = self.rerolls[choice]
             self.turn.roll(reroll_indices) # should rerolling get a reward too?
+            reward = 1
         else:
-            # Action is invalid, resulting in no reward?
-            pass
+            reward = -1
         self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
-
-    def score_category(self, category):
-        if self.scoresheet[category] == -1:
-            self.scoresheet[category] = self.turn.score[category]
-            self.update_scoresheet()
-            self.rnd_count -= 1
-            if self.rnd_count <=0:
-                self.end_game()
-            else:
-                self.turn = Turn(self.scoresheet[:])
-        else:
-            # Scoring option already used, invalid action
-            pass
+        return reward
 
     def update_scoresheet(self):
         upper_section_score = sum(self.scoresheet[:6])
@@ -101,7 +95,7 @@ class Game:
         self.scoresheet[15] = sum(s for s in self.scoresheet[:15] if s > 0)
 
     def end_game(self):
-        # Game over, somehow work out how to provide final scores/reward and/or reset the game
-        pass
-
-# Need a loop that will tie everything together..
+        end_score = self.scoresheet[15]
+        end_reward = end_score/10 if end_score > 200 else -50
+        self.reset_game()
+        return end_reward
