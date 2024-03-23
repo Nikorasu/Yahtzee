@@ -31,7 +31,7 @@ def train_agent(num_episodes):
     optimizer = optim.Adam(agent.parameters(), lr=0.001)
     replay_buffer = deque(maxlen=10000)
     epsilon = 1.0
-    epsilon_decay = 0.9999#0.995
+    epsilon_decay = 0.995 #0.9999
     epsilon_min = 0.01
     gamma = 0.99
     batch_size = 32

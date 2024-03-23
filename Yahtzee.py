@@ -6,7 +6,7 @@ import random
 # how many rerolls are left (1), and a list showing the current game's existing scoresheet including upper bonus, yahtzees, and total score (16).
 # The NN's available outputs, possible actions the NN can take, will be 44, the 13 potential scoring choices, & 31 different re-roll choices.
 # The game class will automatically manage the finer details of scoring, like tallying yahtzee and upper bonuses (so AI only has to choose 1 action).
-# (does nn need to have 13-round countdown?)
+# (does nn need to have 13-round countdown? how do I account for variable turn/round length?)
 
 class Turn:
     
@@ -68,7 +68,7 @@ class Game:
             # Action is a scoring choice
             self.scoresheet[choice] = self.turn.score[choice]
             self.update_scoresheet()
-            reward = self.turn.score[choice] if self.turn.score[choice] > 0 else 0
+            reward = self.turn.score[choice]
             self.rnd_count -= 1
             if self.rnd_count <=0:
                 reward += self.end_game()
@@ -80,9 +80,10 @@ class Game:
         elif choice in self.rerolls and self.rr_remain > 0:
             # Action is a re-roll choice
             self.rr_remain -= 1
-            reward = max(self.turn.score)//2
+            b4roll = max(self.turn.score)
             reroll_indices = self.rerolls[choice]
             self.turn.roll(reroll_indices)
+            reward = max(0, max(self.turn.score) - b4roll)
             max_future_reward = max(self.turn.score)
         else:
             reward = -1
