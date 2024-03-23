@@ -68,7 +68,7 @@ class Game:
             # Action is a scoring choice
             self.scoresheet[choice] = self.turn.score[choice]
             self.update_scoresheet()
-            reward = self.turn.score[choice]
+            reward = self.turn.score[choice] if self.turn.score[choice] > 0 else 0
             self.rnd_count -= 1
             if self.rnd_count <=0:
                 reward += self.end_game()
@@ -100,6 +100,6 @@ class Game:
 
     def end_game(self):
         end_score = self.scoresheet[15]
-        end_reward = end_score if end_score > 100 else -50
+        end_reward = end_score if end_score > 100 else -10
         self.reset_game()
         return end_reward
