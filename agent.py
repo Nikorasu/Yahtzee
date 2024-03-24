@@ -34,8 +34,8 @@ def train_agent(num_episodes):
     epsilon_decay = 0.995 #0.9999
     epsilon_min = 0.01
     gamma = 0.99
-    batch_size = 32
-    update_target_every = 100
+    batch_size = 64
+    update_target_every = 256
 
     for episode in range(num_episodes):
         game.reset_game()

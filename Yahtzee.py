@@ -101,6 +101,6 @@ class Game:
 
     def end_game(self):
         end_score = self.scoresheet[15]
-        end_reward = end_score if end_score > 100 else -10
+        end_reward = end_score if end_score > 150 else -20
         self.reset_game()
         return end_reward
