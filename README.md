@@ -1,7 +1,7 @@
 # Currently a WIP!
 
 The goal of this project is to get a Neural Network to play Yahtzee, possibly through reinforcement learning.
-I've always wanted to learn how to apply a neural network to a game. Only way I'm gonna learn is by trying to understand this way..
+I've always wanted to learn how to apply a neural network to a game! This is just a project for my curiosity.
 
 Already built the Yahtzee game, fully functional and as close to the official rules as I could. Really curious how high a NN might score!
 The game is specifically designed with inputs and outputs simplified into lists, so they can be easily implemented into a Neural Network.
