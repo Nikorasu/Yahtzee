@@ -66,8 +66,8 @@ class Game:
             print(f"Rerolls remaining:  {self.rr_remain}\n")
             choice = input("Choose a score # option, or which dice (abcde) to reroll: ")
             if choice.isdigit() and 0 <= int(choice) < 13 and self.scoresheet[int(choice)] == -1:
-                self.scoresheet[int(choice)] = self.turn.score[int(choice)]
-                self.update_scoresheet()
+                #self.scoresheet[int(choice)] = self.turn.score[int(choice)]
+                self.update_scoresheet(int(choice))
                 self.rr_remain = 2
                 self.rnd_count -= 1
             elif all(c in 'abcde' for c in choice) and self.rr_remain > 0:
@@ -79,12 +79,13 @@ class Game:
             self.valid = True
         self.end_game()
 
-    def update_scoresheet(self):
+    def update_scoresheet(self, choice):
+        if choice == 11 and self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
+            self.scoresheet[14] += 100
+        self.scoresheet[choice] = self.turn.score[choice]
         upper_section_score = sum(self.scoresheet[:6])
         if upper_section_score >= 63:
             self.scoresheet[13] = 35
-        if self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
-            self.scoresheet[14] += 100
         self.scoresheet[15] = sum(s for s in self.scoresheet[:15] if s > 0)
 
     def end_game(self):
