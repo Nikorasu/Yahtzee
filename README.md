@@ -15,7 +15,7 @@ After coding the game, and trying a few basic NN designs as I understood them fr
 So I tried asking Claude.ai, and after a couple tries, it seems to have come up with an agent that kinda works!
 However, I am not experienced enough with reinforcement learning, to know how to tweak things for better results,
 and the AI is currently only able to give me general guidance on how to go further.
-I've made several tweaks to my reward system, and various agent settings, and managed to get the NN to score
-around 200 sometimes, but beyond that it doesn't seem to be progressing.
+I've made several tweaks to my reward system, and various agent settings, and after about 1000 episodes,
+it starts occasionally scoring 250-300 or sometimes over, but beyond that it doesn't seem to be progressing.
 
-If anyone out there could help get this working, I'd greatly appreciate it!
+If anyone out there knows how to improve this, I could really use some help at this point.
