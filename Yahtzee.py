@@ -71,7 +71,7 @@ class Game:
             reward = self.turn.score[choice]
             self.rnd_count -= 1
             if self.rnd_count <=0:
-                reward += self.end_game()
+                reward = self.end_game()
                 max_future_reward = 0
             else:
                 self.turn = Turn(self.scoresheet[:])
@@ -83,7 +83,7 @@ class Game:
             b4roll = max(self.turn.score)
             reroll_indices = self.rerolls[choice]
             self.turn.roll(reroll_indices)
-            reward = max(0, max(self.turn.score) - b4roll)
+            reward = max(10, max(self.turn.score) - b4roll)
             max_future_reward = max(self.turn.score)
         else:
             reward = -1
@@ -101,6 +101,6 @@ class Game:
 
     def end_game(self):
         end_score = self.scoresheet[15]
-        end_reward = end_score if end_score > 150 else -20
+        end_reward = end_score if end_score > 150 else -50
         self.reset_game()
         return end_reward

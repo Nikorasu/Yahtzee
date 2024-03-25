@@ -31,7 +31,7 @@ def train_agent(num_episodes):
     optimizer = optim.Adam(agent.parameters(), lr=0.001)
     replay_buffer = deque(maxlen=10000)
     epsilon = 1.0
-    epsilon_decay = 0.995 #0.9999
+    epsilon_decay = 0.999  # .999 .995
     epsilon_min = 0.01
     gamma = 0.99
     batch_size = 64
@@ -84,7 +84,8 @@ def train_agent(num_episodes):
                 target_agent.load_state_dict(agent.state_dict())
 
         epsilon = max(epsilon * epsilon_decay, epsilon_min)
-        print(f"Episode {episode + 1}: Reward = {episode_reward}")
+        green = '\x1b[32;1m' if episode_reward >= 300 else '\x1b[32m' if episode_reward >=250 else ''
+        print(f"Episode {episode + 1}: Reward = {green}{episode_reward}",end='\x1b[0m\n')
 
 # Example usage
 train_agent(num_episodes=10000)
