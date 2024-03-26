@@ -76,10 +76,8 @@ class Game:
             self.rnd_count -= 1
             if self.rnd_count <=0:
                 reward = self.end_game()
-                #max_future_reward = 0
             else:
                 self.turn = Turn(self.scoresheet[:])
-                #max_future_reward = max(self.turn.score)
             self.rr_remain = 2
         elif choice in self.rerolls and self.rr_remain > 0:
             # Action is a re-roll choice
@@ -89,12 +87,10 @@ class Game:
             reward = len(reroll_indices)
             self.turn.roll(reroll_indices)
             #reward = max(5, max(self.turn.score) - b4roll)
-            #max_future_reward = max(max(self.turn.score), ceil((self.turn.counts.index(max(self.turn.counts))+1) * max(self.turn.counts) * max(self.turn.counts)*.5))
         else:
             reward = -1
-            #max_future_reward = max(self.turn.score)
         self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
-        return reward#, max_future_reward
+        return reward #if self.rnd_count <=0 or reward == -1 else reward//2
 
     def update_scoresheet(self, choice):
         if choice == 11 and self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
@@ -108,8 +104,8 @@ class Game:
     def end_game(self):
         end_score = self.scoresheet[15]
         #end_reward = end_score if end_score > 150 else -50
-        end_reward = end_score*2 if end_score > 200 else end_score if end_score > 100 else end_score//2 if end_score > 50 else 0
+        #end_reward = end_score*2 if end_score > 200 else end_score if end_score > 100 else end_score//2 if end_score > 50 else 0
         # additional reward if all scores indexs(0-10) and 12 are above 0
         #if all(s > 0 for s in self.scoresheet[:11]) and self.scoresheet[12] > 0: end_reward += 100
         self.reset_game()
-        return end_reward
+        return end_score

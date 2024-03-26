@@ -11,7 +11,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 cats = ['Ones', 'Twos', 'Threes', 'Fours', 'Fives', 'Sixes',
         'ThreeKind', 'FourKind', 'FullHouse', 'SmallStraight', 'LargeStraight',
-        '\x1b[36mYahtzee\x1b[0m', 'Chance', '\x1b[32mUpperBonus\x1b[0m', '\x1b[36;1mYahtzeeBonus\x1b[0m', '\x1b[1mTotal\x1b[0m']
+        '\x1b[36mYahtzee\x1b[0m', 'Chance', '\x1b[32mUpperBonus\x1b[0m', '\x1b[36;1mYahtzeeBonus\x1b[0m', '\x1b[1mTotal'] #\x1b[0m
 
 class YahtzeeAgent(nn.Module):
     def __init__(self):
@@ -89,9 +89,9 @@ def train_agent(num_episodes):
 
         epsilon = max(epsilon * epsilon_decay, epsilon_min)
         yellow = '\x1b[33;1m' if episode_reward >= 300 else ''
-        bgreen = '\x1b[32;1m'
+        bgreen = '\a\x1b[32;1m'
         print(f"Episode: {1+episode: <6} Reward: {yellow}{episode_reward: <6}",end='\x1b[0m')
-        print(f"Scored: {'  '.join(f'''{cats[i]}:{bgreen if i==15 and s>200 else ''}{s}''' for i,s in enumerate(game.scoresheet) if s > 0)}",end='\x1b[0m\n')
+        print(f"Scored: {'  '.join(f'''{cats[i]}:{bgreen if i==15 and s>=200 else ''}{s}''' for i,s in enumerate(game.scoresheet) if s > 0)}",end='\x1b[0m\n')
 
 # Example usage
-train_agent(num_episodes=10000)
+train_agent(num_episodes=100000)
