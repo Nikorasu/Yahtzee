@@ -65,35 +65,36 @@ class Game:
 
     def action(self, choice):
         # Takes a number from 0 to 43, corresponding to the 13 scoring choices and 31 re-roll choices.
-        if (0 <= choice < 13) and self.scoresheet[choice] == -1:
+        if ((0 <= choice < 13) and self.scoresheet[choice] == -1) or choice == 11:
             # Action is a scoring choice
             self.update_scoresheet(choice)
             #reward = self.turn.score[choice] if self.turn.score[choice] > 0 else -1
             #reward = self.turn.score[choice] if choice > 5 or (choice < 6 and any(count > 2 for count in self.turn.counts)) else 0
-            reward = self.turn.score[choice] if choice > 5 else ceil(self.turn.score[choice] * self.turn.counts[choice]*.5)
-            # add more reward points if yahtzee
+            reward = self.turn.score[choice] #if choice > 5 else ceil(self.turn.score[choice] * self.turn.counts[choice]*.5)
+            # if yahtzee, add more reward points for encouragement
             reward += 50 if choice == 11 and any(count == 5 for count in self.turn.counts) else 0
             self.rnd_count -= 1
             if self.rnd_count <=0:
                 reward = self.end_game()
-                max_future_reward = 0
+                #max_future_reward = 0
             else:
                 self.turn = Turn(self.scoresheet[:])
-                max_future_reward = max(self.turn.score)
+                #max_future_reward = max(self.turn.score)
             self.rr_remain = 2
         elif choice in self.rerolls and self.rr_remain > 0:
             # Action is a re-roll choice
             self.rr_remain -= 1
-            b4roll = max(self.turn.score)
+            #b4roll = max(self.turn.score)
             reroll_indices = self.rerolls[choice]
+            reward = len(reroll_indices)
             self.turn.roll(reroll_indices)
-            reward = max(5, max(self.turn.score) - b4roll)
-            max_future_reward = max(max(self.turn.score), ceil((self.turn.counts.index(max(self.turn.counts))+1) * max(self.turn.counts) * max(self.turn.counts)*.5))
+            #reward = max(5, max(self.turn.score) - b4roll)
+            #max_future_reward = max(max(self.turn.score), ceil((self.turn.counts.index(max(self.turn.counts))+1) * max(self.turn.counts) * max(self.turn.counts)*.5))
         else:
             reward = -1
-            max_future_reward = max(self.turn.score)
+            #max_future_reward = max(self.turn.score)
         self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
-        return reward, max_future_reward
+        return reward#, max_future_reward
 
     def update_scoresheet(self, choice):
         if choice == 11 and self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):

@@ -65,7 +65,7 @@ class Game:
             print(f"Available:  {'  '.join(f'{i}-{cats[i]}: {s}' for i,s in enumerate(self.turn.score) if s > 0)}")
             print(f"Rerolls remaining:  {self.rr_remain}\n")
             choice = input("Choose a score # option, or which dice (abcde) to reroll: ")
-            if choice.isdigit() and 0 <= int(choice) < 13 and self.scoresheet[int(choice)] == -1:
+            if choice.isdigit() and (0 <= int(choice) < 13 and self.scoresheet[int(choice)] == -1) or choice == 11:
                 #self.scoresheet[int(choice)] = self.turn.score[int(choice)]
                 self.update_scoresheet(int(choice))
                 self.rr_remain = 2
