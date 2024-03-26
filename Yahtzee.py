@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import random
+from math import ceil
 
 # A simple list-based terminal Yahtzee game, designed specifically to work with machine learning neural networks.
 # The NN will have 35 inputs per turn: the initial dice roll (5 numbers), a list of how that roll might be scored (13)
@@ -66,9 +67,12 @@ class Game:
         # Takes a number from 0 to 43, corresponding to the 13 scoring choices and 31 re-roll choices.
         if (0 <= choice < 13) and self.scoresheet[choice] == -1:
             # Action is a scoring choice
-            self.scoresheet[choice] = self.turn.score[choice]
-            self.update_scoresheet()
-            reward = self.turn.score[choice]
+            self.update_scoresheet(choice)
+            #reward = self.turn.score[choice] if self.turn.score[choice] > 0 else -1
+            #reward = self.turn.score[choice] if choice > 5 or (choice < 6 and any(count > 2 for count in self.turn.counts)) else 0
+            reward = self.turn.score[choice] if choice > 5 else ceil(self.turn.score[choice] * self.turn.counts[choice]*.5)
+            # add more reward points if yahtzee
+            reward += 50 if choice == 11 and any(count == 5 for count in self.turn.counts) else 0
             self.rnd_count -= 1
             if self.rnd_count <=0:
                 reward = self.end_game()
@@ -83,24 +87,28 @@ class Game:
             b4roll = max(self.turn.score)
             reroll_indices = self.rerolls[choice]
             self.turn.roll(reroll_indices)
-            reward = max(10, max(self.turn.score) - b4roll)
-            max_future_reward = max(self.turn.score)
+            reward = max(5, max(self.turn.score) - b4roll)
+            max_future_reward = max(max(self.turn.score), ceil((self.turn.counts.index(max(self.turn.counts))+1) * max(self.turn.counts) * max(self.turn.counts)*.5))
         else:
             reward = -1
-            max_future_reward = 0
+            max_future_reward = max(self.turn.score)
         self.nn_in = self.turn.dice + self.turn.score + [self.rr_remain] + [max(0, s) for s in self.scoresheet]
         return reward, max_future_reward
 
-    def update_scoresheet(self):
+    def update_scoresheet(self, choice):
+        if choice == 11 and self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
+            self.scoresheet[14] += 100
+        self.scoresheet[choice] = self.turn.score[choice]
         upper_section_score = sum(self.scoresheet[:6])
         if upper_section_score >= 63:
             self.scoresheet[13] = 35
-        if self.scoresheet[11] == 50 and any(count == 5 for count in self.turn.counts):
-            self.scoresheet[14] += 100
         self.scoresheet[15] = sum(s for s in self.scoresheet[:15] if s > 0)
 
     def end_game(self):
         end_score = self.scoresheet[15]
-        end_reward = end_score if end_score > 150 else -50
+        #end_reward = end_score if end_score > 150 else -50
+        end_reward = end_score*2 if end_score > 200 else end_score if end_score > 100 else end_score//2 if end_score > 50 else 0
+        # additional reward if all scores indexs(0-10) and 12 are above 0
+        #if all(s > 0 for s in self.scoresheet[:11]) and self.scoresheet[12] > 0: end_reward += 100
         self.reset_game()
         return end_reward

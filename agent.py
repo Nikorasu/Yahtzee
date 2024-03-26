@@ -9,6 +9,10 @@ from collections import deque
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+cats = ['Ones', 'Twos', 'Threes', 'Fours', 'Fives', 'Sixes',
+        'ThreeKind', 'FourKind', 'FullHouse', 'SmallStraight', 'LargeStraight',
+        '\x1b[36mYahtzee\x1b[0m', 'Chance', 'UpperBonus', 'YahtzeeBonus', 'Total']
+
 class YahtzeeAgent(nn.Module):
     def __init__(self):
         super(YahtzeeAgent, self).__init__()
@@ -85,7 +89,8 @@ def train_agent(num_episodes):
 
         epsilon = max(epsilon * epsilon_decay, epsilon_min)
         green = '\x1b[32;1m' if episode_reward >= 300 else '\x1b[32m' if episode_reward >=250 else ''
-        print(f"Episode {episode + 1}: Reward = {green}{episode_reward}",end='\x1b[0m\n')
+        print(f"Episode: {1+episode: <6} Reward: {green}{episode_reward: <6}",end='\x1b[0m')
+        print(f"Scored: {'  '.join(f'{cats[i]}:{s}' for i,s in enumerate(game.scoresheet) if s > 0)}")
 
 # Example usage
 train_agent(num_episodes=10000)
